@@ -5,13 +5,13 @@ import EditProductPage from "./pages/EditProductPage";
 import ListPage from "./pages/ListPage";
 import LoginPage from "./pages/LoginPage";
 import OrdersPage from "./pages/OrdersPage";
-import { init } from "./Web3Client";
+import Web3Client from "./Web3Client";
 
 function App() {
 
-    /*useEffect(() => {
-        init();
-    },[]);*/
+    useEffect(() => {
+        //const client = new Web3Client();
+    }, []);
 
     return (
         <Routes>

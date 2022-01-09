@@ -15,14 +15,14 @@ export default function CreateProductPage() {
                             </div>
                             <div className="w-1/4">
                                 <label>Preis</label>
-                                <div class="mt-2 relative">
+                                <div className="mt-2 relative">
                                     <input
                                     type="number"
-                                    class="font-mono w-full bg-gray-50 rounded-md shadow py-2 pl-4 pr-12" 
+                                    className="font-mono w-full bg-gray-50 rounded-md shadow py-2 pl-4 pr-12" 
                                     placeholder="0.00" 
                                     aria-describedby="price-currency"/>
-                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                        <span class="text-gray-500 font-mono" id="price-currency">
+                                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <span className="text-gray-500 font-mono" id="price-currency">
                                             ETH
                                         </span>
                                     </div>

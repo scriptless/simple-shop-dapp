@@ -39,6 +39,12 @@ contract ManageShop is Authentication {
         return orderIdCounter++;
     }
 
+    function getOrder(uint id) public view returns(uint, uint, uint, address, uint) {
+        Shared.Order memory order = orders[id];
+        require(order.flag == 1, "There is no such order");
+        return (order.itemId, order.amount, order.finalCost, order.userAddress, order.orderTime);
+    }
+
     function deleteOrder(uint orderId) public onlyOwner {
         Shared.Order memory order = orders[orderId];
         require(order.flag == 1, "There is no such order");
@@ -106,6 +112,7 @@ contract ManageShop is Authentication {
         item.description = description;
         item.cost = cost;
         item.inventory = inventory;
+        shopItems[id] = item;
         emit EditShopItem(id);
     }
 }

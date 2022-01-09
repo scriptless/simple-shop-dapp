@@ -16,6 +16,7 @@ contract Shop is ManageShop {
         payable(msg.sender).transfer(finalCost);
 
         item.inventory -= amount;
+        shopItems[itemId] = item;
 
         emit BoughtItem(itemId, amount, finalCost, msg.sender);
         ManageShop.createOrder(itemId, amount, finalCost, msg.sender);
