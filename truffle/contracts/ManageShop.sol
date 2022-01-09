@@ -125,15 +125,3 @@ contract ManageShop is Authentication {
         emit EditShopItem(id);
     }
 }
-
-
-/* Commands
-
-let auth = await Authentication.deployed()
-auth.register("Alexander Korfken", "Bonner Allee", 12, 53111, "Bonn")
-auth.isUser()
-let shop = await ManageShop.deployed()
-shop.addShopItem("Hausschuhe", "Beschreibung für Hausschuhe", 5, 10)
-let hausschuhe = await shop.shopItems(1)
-hausschuhe.description
-*/

@@ -18,13 +18,12 @@ class Web3Client {
         })
 
         this.web3 = new Web3(provider);
-        //this.buy(1, 1, Web3.utils.toWei("10"), "test", "test", 1, 1, "test");
     }
 
     async loadContract() {
         return new Promise(async (resolve, reject) => {
             const networkId = await this.web3.eth.net.getId();
-             const shopContract = new this.web3.eth.Contract(
+            const shopContract = new this.web3.eth.Contract(
                 ShopContractBuild.abi,
                 ShopContractBuild.networks[networkId].address
             );
@@ -158,28 +157,5 @@ class Web3Client {
         }
     }
 }
-
-/*export const isOwner = async (address) => {
-    const owner = await shopContract.methods.isOwner(address).call();
-    console.log(owner);
-    return owner;
-}
-
-export const getUser = async () => {
-    let provider = window.ethereum;
-    if(typeof provider !== 'undefined') {
-        return provider
-            .request({ method: 'eth_requestAccounts' })
-            .then((accounts) => {
-                return accounts[0];
-            })
-            .catch(err => {
-                console.log(err);
-                return null;
-            });
-    } else {
-        return null;
-    }
-}*/
 
 export default new Web3Client();
