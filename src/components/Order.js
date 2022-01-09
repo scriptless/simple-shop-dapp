@@ -9,11 +9,13 @@ export default function Order(props) {
     const finalCost = props.data[2];
     const userAddress = props.data[3];
     const timestamp = new Date(props.data[4]*1000);
+    const userData = props.data[5];
     const [open, setOpen] = useState(false);
     const [itemName, setItemName] = useState(false);
 
     async function getItemName() {
         const item = await Web3Client.getShopItem(itemId);
+        if(item == null) return "Gelöscht";
         return item[0];
     }
 
@@ -28,8 +30,8 @@ export default function Order(props) {
                     {timestamp.toLocaleDateString("de-DE") + " " + timestamp.toLocaleTimeString("de-DE")}
                 </div>
                 <div className="flex items-center justify-center space-x-5">
-                    <p className="text-gray-500 font-mono">{Web3.utils.fromWei(finalCost)} ETH</p>
-                    <p className="text-gray-500 font-mono truncate">{userAddress}</p>
+                    <p className="text-gray-500 font-mono">{Number(Web3.utils.fromWei(finalCost)).toFixed(6)} ETH</p>
+                    <p className="text-gray-500 font-mono">{userAddress}</p>
                     <button onClick={() => setOpen(!open)} className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 font-semibold py-2 px-4 rounded-md shadow">
                         {open ? (
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,27 +60,27 @@ export default function Order(props) {
                             <label>Smart Contract Tx</label>
                             <p><a 
                             target="_blank"
-                            href="https://etherscan.io/address/0x1719b7c0f3b69f84349caa96dcfb6306b88624b1" 
+                            href="" 
                             className="font-normal break-all text-blue-800 hover:text-blue-700 underline">
-                                https://etherscan.io/address/0x1719b7c0f3b69f84349caa96dcfb6306b88624b1
+                                https://in-future:explorer-link
                             </a></p>
                         </div>
-                        <button className="float-left mt-5 bg-white hover:bg-gray-50 text-red-600 border border-gray-300 font-semibold py-2 px-4 rounded-md shadow">
+                        <button onClick={props.delete} className="float-left mt-5 bg-white hover:bg-gray-50 text-red-600 border border-gray-300 font-semibold py-2 px-4 rounded-md shadow">
                             Löschen
                         </button>
                     </div>
                     <div className="col-span-1">
                         <div className="w-full">
                             <label>Vollständiger Name</label>
-                            <p className="font-normal">Alexander Kürfgen</p>
+                            <p className="font-normal">{userData[0]}</p>
                         </div>
                         <div className="w-full mt-5">
                             <label>Straße, Haus Nr.</label>
-                            <p className="font-normal">Berliner Allee 1</p>
+                            <p className="font-normal">{userData[1]} {userData[2]}</p>
                         </div>
                         <div className="w-full mt-5">
                             <label>Postleitzahl, Stadt</label>
-                            <p className="font-normal">12345 Musterstadt</p>
+                            <p className="font-normal">{userData[3]} {userData[4]}</p>
                         </div>
                     </div>
                 </div>

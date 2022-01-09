@@ -12,11 +12,13 @@ class Web3Client {
 
         window.ethereum.on('accountsChanged', function (accounts) {
             if(accounts && accounts !== 'undefined') {
+                window.location.reload();
                 console.log(`Account changed to ${accounts[0]}`);
             }
         })
 
         this.web3 = new Web3(provider);
+        //this.buy(1, 1, Web3.utils.toWei("10"), "test", "test", 1, 1, "test");
     }
 
     async loadContract() {
@@ -30,11 +32,54 @@ class Web3Client {
         })
     }
 
+    async buy(itemId, amount, totalCost, name, street, number, postal, city) {
+        console.log(itemId, amount, name, street, number, postal, city);
+        try {
+            const contract = await this.loadContract();
+            const user = await this.getUser();
+            const add = await contract.methods.buy(itemId, amount, [name, street, number, postal, city])
+                .send({from: user, value: totalCost});
+            return add;
+        } catch(e) {
+            console.log(e);
+            return false;
+        }
+    }
+
+    async editShopItem(itemId, {title, description, cost, inventory}) {
+        console.log(itemId, title, description, cost, inventory);
+        try {
+            const contract = await this.loadContract();
+            const user = await this.getUser();
+            const costWei = Web3.utils.toWei(""+cost);
+            const add = await contract.methods.editShopItem(itemId, title, description, `${costWei}`, `${inventory}`)
+                .send({from: user});
+            return add;
+        } catch(e) {
+            console.log(e);
+            return false;
+        }
+    }
+
+    async addShopItem({title, description, cost, inventory}) {
+        try {
+            const contract = await this.loadContract();
+            const user = await this.getUser();
+            const costWei = Web3.utils.toWei(""+cost);
+            const add = await contract.methods.addShopItem(title, description, `${costWei}`, `${inventory}`)
+                .send({from: user});
+            return add;
+        } catch(e) {
+            console.log(e);
+            return false;
+        }
+    }
+
     async getOrders() {
         let indexes = [];
         const contract = await this.loadContract();
-        const maxOrders = await contract.methods.orderIdCounter().call();
-        for(let i = 0; i < maxOrders; i++) {
+        const count = await contract.methods.getOrderCount().call();
+        for(let i = 0; i < count; i++) {
             await contract.methods.orderIndexes(i).call().then(i => {
                 indexes.push(i);
             }).catch(_ => _);
@@ -42,11 +87,25 @@ class Web3Client {
         let orders = [];
         for(let i = 0; i < indexes.length; i++) {
             await contract.methods.getOrder(indexes[i]).call().then(item => {
-                orders.push(item);
+                orders.push({orderId: indexes[i], ...item});
             }).catch(err => console.log(err));
         }
         console.log(orders);
         return orders;
+    }
+
+    async deleteOrder(orderId) {
+        const contract = await this.loadContract();
+        const user = await this.getUser();
+        const success = await contract.methods.deleteOrder(orderId).send({from: user});
+        return success;
+    }
+
+    async deleteShopItem(itemId) {
+        const contract = await this.loadContract();
+        const user = await this.getUser();
+        const success = await contract.methods.deleteShopItem(itemId).send({from: user});
+        return success;
     }
 
     async getShopItem(itemId) {
@@ -58,8 +117,8 @@ class Web3Client {
     async getShopItems() {
         let indexes = [];
         const contract = await this.loadContract();
-        const maxShopItems = await contract.methods.idCounter().call();
-        for(let i = 0; i < maxShopItems; i++) {
+        const count = await contract.methods.getShopItemCount().call();
+        for(let i = 0; i < count; i++) {
             await contract.methods.shopItemIndexes(i).call().then(i => {
                 indexes.push(i);
             }).catch(_ => _);
@@ -67,15 +126,19 @@ class Web3Client {
         let shopItems = [];
         for(let i = 0; i < indexes.length; i++) {
             await contract.methods.getShopItem(indexes[i]).call().then(item => {
-                shopItems.push(item);
+                shopItems.push({itemId: indexes[i], ...item});
             }).catch(err => console.log(err));
         }
         return shopItems;
     }
 
     async isOwner(address) {
-        const contract = await this.loadContract();
-        return await contract.methods.isOwner(address).call();
+        try {
+            const contract = await this.loadContract();
+            return await contract.methods.isOwner(address).call();
+        } catch(_) {
+            return false;
+        }
     }
 
     async getUser() {

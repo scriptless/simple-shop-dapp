@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Web3Client from "../Web3Client";
-import Loading from "./Loading";
 import NotLoggedIn from "./NotLoggedIn";
 
 export default function Navbar() {
@@ -42,9 +41,6 @@ export default function Navbar() {
                 </Link>
                 <Link to="/orders" type="button" className="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                     Bestellungen anzeigen
-                    <span className="bg-indigo-100 text-indigo-600 hidden ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">
-                        1
-                    </span>
                 </Link>
                 <Link to="/create-product" type="button" className="-ml-px relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                     Neues Produkt erstellen

@@ -41,7 +41,7 @@ contract ManageShop is Authentication {
         uint finalCost,
         address userAddress,
         Shared.UserData memory userData
-    ) public onlyOwner returns(uint) {
+    ) internal returns(uint) {
         orders[orderIdCounter] = Shared.Order(1, itemId, amount, finalCost, userAddress, block.timestamp, userData);
         orderIndexes.push(orderIdCounter);
         emit CreateOrder(orderIdCounter);
