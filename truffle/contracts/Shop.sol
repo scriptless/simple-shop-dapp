@@ -6,7 +6,7 @@ contract Shop is ManageShop {
 
     event BoughtItem(uint itemId, uint amount, uint cost, address userAddress);
 
-    function buy(uint itemId, uint amount) public payable onlyUser greaterThanZero(amount) {
+    function buy(uint itemId, uint amount, Shared.UserData memory userData) public payable greaterThanZero(amount) {
         Shared.ShopItem memory item = shopItems[itemId];
         require(item.flag == 1, "There is no such shop item");
         require(item.inventory >= amount, "There is not enough in the inventory");
@@ -19,6 +19,6 @@ contract Shop is ManageShop {
         shopItems[itemId] = item;
 
         emit BoughtItem(itemId, amount, finalCost, msg.sender);
-        ManageShop.createOrder(itemId, amount, finalCost, msg.sender);
+        ManageShop.createOrder(itemId, amount, finalCost, msg.sender, userData);
     }
 }

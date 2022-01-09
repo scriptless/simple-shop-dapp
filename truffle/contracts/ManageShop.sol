@@ -27,22 +27,31 @@ contract ManageShop is Authentication {
         _;
     }
 
+    function getOrderCount() public view returns(uint count) {
+        return orderIndexes.length;
+    }
+
+    function getShopItemCount() public view returns(uint count) {
+        return shopItemIndexes.length;
+    }
+
     function createOrder(
         uint itemId,
         uint amount,
         uint finalCost,
-        address userAddress
+        address userAddress,
+        Shared.UserData memory userData
     ) public onlyOwner returns(uint) {
-        orders[orderIdCounter] = Shared.Order(1, itemId, amount, finalCost, userAddress, block.timestamp);
+        orders[orderIdCounter] = Shared.Order(1, itemId, amount, finalCost, userAddress, block.timestamp, userData);
         orderIndexes.push(orderIdCounter);
         emit CreateOrder(orderIdCounter);
         return orderIdCounter++;
     }
 
-    function getOrder(uint id) public view returns(uint, uint, uint, address, uint) {
+    function getOrder(uint id) public view returns(uint, uint, uint, address, uint, Shared.UserData memory userData) {
         Shared.Order memory order = orders[id];
         require(order.flag == 1, "There is no such order");
-        return (order.itemId, order.amount, order.finalCost, order.userAddress, order.orderTime);
+        return (order.itemId, order.amount, order.finalCost, order.userAddress, order.orderTime, order.userData);
     }
 
     function deleteOrder(uint orderId) public onlyOwner {
